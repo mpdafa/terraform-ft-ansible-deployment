@@ -1,8 +1,45 @@
-## Command 
+## Command
+
+### AWS Configure
+
+```
+-> aws configure sso
+SSO session name (Recommended):
+WARNING: Configuring using legacy format (e.g. without an SSO session).
+Consider re-running "configure sso" command and providing a session name.
+SSO start URL [None]: https://dana-indonesia.awsapps.com/start
+SSO region [None]: ap-southeast-1
+There are 2 AWS accounts available to you.
+Using the account ID 544243773109
+The only role available to you is: SRE
+Using the role name "SRE"
+CLI default client Region [ap-southeast-1]:
+CLI default output format [json]:
+CLI profile name [SRE-544243773109]: dafa-sre
+To use this profile, specify the profile name using --profile, as shown:
+aws s3 ls --profile dafa-sre
+```
+
+Query all latest AMI
+
+```
+aws ec2 describe-images \
+  --owners amazon \
+  --filters "Name=name,Values=amzn2-ami-hvm-*-x86_64-gp2" "Name=state,Values=available" \
+  --query 'Images[*].[ImageId,CreationDate,Name]' \
+  --region ap-southeast-1 \
+  --output text \
+  --profile dafa-sre \
+# | grep '2024' \ # If needed
+| sort -k2 -r
+```
+
+### Terraform Execute
+
 ```
 terraform init
 terraform plan
-terraform fmt 
+terraform fmt
 terraform apply --auto-approve
 terraform state list
 terraform show
@@ -12,6 +49,7 @@ terraform state show aws_vpc.our_vpc
 ```
 
 ### State Output
+
 ```
 -> resource "aws_vpc" "our_vpc" {
     arn                                  = "arn:aws:ec2:us-east-1:113296392243:vpc/vpc-0968cbac5f4fb1eb0"
@@ -38,27 +76,35 @@ terraform state show aws_vpc.our_vpc
 }
 ```
 
-How to get AMI name : 
+How to get AMI name :
+
 ```
 aws ec2 describe-images --image-ids ami-0e8a34246278c21e4
 ```
 
-Enter file in which to save the key (C:\Users\xxxx/.ssh/id_ed25519): C:\Users\xxxx/.ssh/aws_key 
+Enter file in which to save the key (C:\Users\xxxx/.ssh/id_ed25519): C:\Users\xxxx/.ssh/aws_key
+
 ```
 ssh-keygen -t ed25519
 ls ~/.ssh
 ssh -i ~/.ssh/aws_key ec2-user@44.204.113.211
 ```
+
 ## SSH
+
 Linux
+
 ```
 terraform show | grep "private_ip"
 ```
+
 Windows
+
 ```
 terraform show | findstr private_ip
 terraform show | findstr public_ip
 ```
+
 ```
 ssh -i ~/.ssh/aws_key -v ec2-user@ip_public
 ```

@@ -14,8 +14,8 @@ terraform {
 # cd .\.aws\
 
 provider "aws" {
-  region = "us-east-2"
+  region = "ap-southeast-1"
   # shared_config_files      = ["~/.aws/conf"]
-  shared_credentials_files = ["~/.aws/credentials"]
-  # profile                  = "vscode"
+  # shared_credentials_files = ["~/.aws/credentials"]
+  profile                    = "dafa-sre" # Using AWS SSO
 }
